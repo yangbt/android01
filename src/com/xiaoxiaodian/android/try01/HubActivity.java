@@ -52,7 +52,7 @@ public class HubActivity extends Activity implements OnItemClickListener {
 
 	private void initModelData() {
 		Intent aIntent = null;
-		AllData aAllData = new AllData();
+		Model aAllData = new Model();
 		ListData1 aData = aAllData.initModelData();
 		if (aData.dataCategory == MyConst.CATIINTENT) {
 			for (Map<String, Object> i : aData.getData()) {

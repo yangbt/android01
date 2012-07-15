@@ -46,7 +46,7 @@ public class InfoActivity extends Activity {
 	private void initModelData(String data) {
 		if (data == null || data.isEmpty())
 			return;
-		AllData aData=new AllData();
+		Model aData=new Model();
 		mModelData = aData.getData(data);
 	}
 }

@@ -8,6 +8,15 @@ import java.util.Map;
 import android.util.Log;
 
 public class ReflectHelper {
+	public static ArrayList<Map<String, Object>> getClassData(
+			String pClassname, Object classObject, int aExcludedModifer) {
+		// int aExcludedModifer = 0x0;
+		ArrayList<Map<String, Object>> aData = new ArrayList<Map<String, Object>>();
+		getFields(aData, pClassname, classObject, aExcludedModifer);
+		getAtrtribute(aData, pClassname, classObject);
+		return aData;
+
+	}
 
 	public static ArrayList<Map<String, Object>> getStaticFields(
 			String className) {
@@ -68,7 +77,7 @@ public class ReflectHelper {
 		try {
 			// get class
 			aClass = Class.forName(className);
-			getFields(aData, aClass,classObject, excludedModifier);
+			getFields(aData, aClass, classObject, excludedModifier);
 		} catch (SecurityException e) {
 			// throw new RuntimeException(e.getMessage());
 			e.printStackTrace();
@@ -89,7 +98,7 @@ public class ReflectHelper {
 		Map<String, Object> item = null;
 		Class aClass = pClass;
 		int modifiers = 0x0;
-		int mf1=0x0;
+		int mf1 = 0x0;
 		Object aObject = classObject;
 		Field[] allFields = null;
 
@@ -97,15 +106,16 @@ public class ReflectHelper {
 			// get class
 			// aClass = Class.forName(className);
 			modifiers = aClass.getModifiers();
-			if (!Modifier.isStatic(modifiers) && aObject==null)
+			if (!Modifier.isStatic(modifiers) && aObject == null)
 				aObject = aClass.newInstance();
 			// 取得所有filed
 			allFields = aClass.getDeclaredFields();
 			for (int i = 0; i < allFields.length; i++) {
 				try {
 					Log.e("Field name", allFields[i].getName());
-					mf1=allFields[i].getModifiers();
-					if ((mf1 & excludedModifier)==excludedModifier && excludedModifier!=0)
+					mf1 = allFields[i].getModifiers();
+					if ((mf1 & excludedModifier) == excludedModifier
+							&& excludedModifier != 0)
 						continue;
 					if (!allFields[i].isAccessible())
 						allFields[i].setAccessible(true);
@@ -147,8 +157,9 @@ public class ReflectHelper {
 			Class[] aClasses = aClass.getDeclaredClasses();
 			for (Class i : aClasses) {
 				String n = i.getName();
-				if(n.equalsIgnoreCase(pClassname+"$"+pInnerClassname));
-				aClass2=i;
+				if (n.equalsIgnoreCase(pClassname + "$" + pInnerClassname))
+					;
+				aClass2 = i;
 				break;
 			}
 		} catch (SecurityException e) {
@@ -185,30 +196,47 @@ public class ReflectHelper {
 	 * RuntimeException(e.getMessage()); e.printStackTrace(); } catch (Exception
 	 * e) { // TODO Auto-generated catch block e.printStackTrace(); } return; }
 	 */
-	
+
 	//
 	public static void getAtrtribute(ArrayList<Map<String, Object>> aData,
-			String className,Object classObject) {
+			String className, Object classObject) {
 		// ArrayList<Map<String, Object>> aData = new ArrayList<Map<String,
 		// Object>>();
 		Map<String, Object> item = null;
 		Class aClass = null;
 		int modifiers = 0x0;
+		String back = "";
+		Type t = null;
 		Object aObject = classObject;
-
+		String mName="";
+		Class<?>[] cs=null;
+		
 		try {
 			// get class
 			aClass = Class.forName(className);
 			modifiers = aClass.getModifiers();
-			if (!Modifier.isStatic(modifiers) && aObject==null)
+			if (!Modifier.isStatic(modifiers) && aObject == null)
 				aObject = aClass.newInstance();
 
 			Method[] allMethods = aClass.getDeclaredMethods();
 
 			for (int i = 0; i < allMethods.length; i++) {
-				if (allMethods[i].getName().startsWith("get")
-						&& allMethods[i].getParameterTypes() == null) {
-					String back = (String) allMethods[i].invoke(aObject);
+				mName=allMethods[i].getName();
+				cs=allMethods[i].getParameterTypes() ;
+				if (mName.startsWith("get")
+						&& cs == null) {
+					String tmp="";
+					Log.e("come to ",mName);
+					
+					//t = allMethods[i].getGenericReturnType();
+					tmp="b";
+					Log.e("come to ",t.toString());
+					
+					if (t == String.class) {
+						back = (String) allMethods[i].invoke(aObject);
+					} else {
+						back = (String) allMethods[i].invoke(aObject);
+					}
 					Log.e("method name", allMethods[i].getName());
 					item = new HashMap<String, Object>();
 					item.put(MyConst.ITEMKEY, allMethods[i].getName());
@@ -218,6 +246,7 @@ public class ReflectHelper {
 			}
 		} catch (SecurityException e) {
 			// throw new RuntimeException(e.getMessage());
+			Log.e("erro",e.getMessage());
 			e.printStackTrace();
 		} catch (IllegalArgumentException e) {
 			// throw new RuntimeException(e.getMessage());

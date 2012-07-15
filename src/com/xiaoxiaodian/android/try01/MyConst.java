@@ -14,6 +14,7 @@ public static final String  CONFIG="android.content.res.Configuration";
 public static final String  DISPLAY="android.util.DisplayMetrics";
 public static final String  CALLS="android.provider.CallLog.Call";
 public static final String  SECURE="android.provider.Settings.Secure";
+public static final String 	TEL="android.telephony.TelephonyManager";
 
 public static final String SPLITER=",\n";
 }

@@ -13,69 +13,22 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.util.DisplayMetrics;
 
-public class AllData {
+public class Model {
 
 	/*
 	 * public static ArrayList<Map<String, Object>> getAndroidOsBuild(){ return
 	 * ReflectHelper.getStaticFields("android.os.Build"); }
 	 */
 
-	public static ArrayList<Map<String, Object>> getClassData(String pClassname,Object classObject,int aExcludedModifer) {
-		//int aExcludedModifer = 0x0;
-		ArrayList<Map<String, Object>> aData = new ArrayList<Map<String, Object>>();
-		ReflectHelper.getFields(aData, pClassname, classObject,aExcludedModifer);
-		ReflectHelper.getAtrtribute(aData, pClassname,classObject);
-		return aData;
 
-	}
 
 	
-	private static void addItem(List<Map<String, Object>> data, String name,
-			String value, String intentdata) {
-		Map<String, Object> temp = new HashMap<String, Object>();
-		temp.put(MyConst.ITEMKEY, name);
-		temp.put(MyConst.ITEMVALUE, value);
-		Intent result = new Intent();
-		result.putExtra(MyConst.INTENTDATA, intentdata);
-		temp.put(MyConst.ITEMINTENT, result);
-		data.add(temp);
-	}
+
 
 	public static ListData1 initModelData() {
-		ListData1 aListData = new ListData1();
-		ArrayList<Map<String, Object>> mModelData = new ArrayList<Map<String, Object>>();
-		addItem(mModelData, "Build", "android.os.Build", "android.os.Build");
-		addItem(mModelData, "BuildVersion", "android.os.Build.VERSION",
-				"android.os.Build$VERSION");
-		addItem(mModelData, "Environment", "android.os.Environment",
-				"android.os.Environment");
-	
-		addItem(mModelData, "Settings", "android.provider.Settings$System",
-				"android.provider.Settings$System");
-		addItem(mModelData, "Telephony", "android.telephony.TelephonyManager",
-				"android.telephony.TelephonyManager");
-		addItem(mModelData, "Activity", "android.app.ActivityManager",
-				"android.app.ActivityManager");
-		addItem(mModelData, "Runtime", "java.lang.Runtime", "java.lang.Runtime");
-		addItem(mModelData, "Browser", "android.provider.Browser",
-				"android.provider.Browser");
-		addItem(mModelData, "Permission", "android.Manifest$permission",
-				"android.Manifest$permission");
-		addItem(mModelData, "Permission", "android.Manifest$permission_group",
-				"android.Manifest$permission_group");
-		addItem(mModelData, "Configuration", "android.content.res.Configuration",
-				"android.content.res.Configuration");
-		addItem(mModelData, "DisplayMetrics", "android.util.DisplayMetrics",
-				"android.util.DisplayMetrics");
+		ListData1 aListData = ConfigData.getConfigData();
 		
-		addItem(mModelData, "Calls", "android.provider.CallLog.Call",
-				"android.provider.CallLog.Call");		
-		addItem(mModelData, "Calls", "android.provider.Settings.Secure",
-				"android.provider.Settings.Secure");	
-		
-		aListData.setData(mModelData);
-		aListData.dataCategory = MyConst.CATIINTENT;
-		return aListData;
+		return aListData;		
 	}
 
 	public static ArrayList<Map<String, Object>> getData(String target) {
@@ -92,50 +45,15 @@ public class AllData {
 			aData=CallLogData.getData();
 		}else if(target.equalsIgnoreCase(MyConst.SECURE)){
 			aData=SettingSecureData.getData();
+		}else if(target.equalsIgnoreCase(MyConst.TEL)){
+			aData=TelephoneData.getData();
 		}
 		else
-			aData = getClassData(target,null,0);
+			aData = ReflectHelper.getClassData(target,null,0);
 		return aData;
 	}
 
-	private static ArrayList<Map<String, Object>> getSystemSetting() {
-		int aExcludedModifer = 0x0;
-		ArrayList<Map<String, Object>> aData = new ArrayList<Map<String, Object>>();
-		ArrayList<Map<String, Object>> aData2 = new ArrayList<Map<String, Object>>();
-		Context ct = MyApplication.getAppContext();
-		String aTemp = null;
-		HashMap<String, Object> item = null;
-
-		// Class
-		// b=ReflectHelper.getInnerClass("android.provider.Settings","System");
-		ReflectHelper.getFields(aData, MyConst.SETTINGCLASS,null, aExcludedModifer);
-
-		// get content by getString() method
-		for (Map<String, Object> i : aData) {
-			Field f = (Field) (i.get(MyConst.ITEMEXT1));
-			if (ReflectHelper.isPublicStaticFinal(f)
-					&& ReflectHelper.isString(f)) {
-				aTemp = android.provider.Settings.System.getString(
-						ct.getContentResolver(),
-						(String) i.get(MyConst.ITEMVALUE));
-				item = new HashMap<String, Object>();
-				item.put(MyConst.ITEMKEY, i.get(MyConst.ITEMKEY));
-				item.put(MyConst.ITEMVALUE, aTemp);
-				aData2.add(item);
-			}
-		}
-
-		// add other fields
-		item = new HashMap<String, Object>();
-		item.put(MyConst.ITEMKEY, "CONTENT_URI");
-		item.put(MyConst.ITEMVALUE,
-				android.provider.Settings.System.CONTENT_URI.toString());
-		aData2.add(item);
-
-		return aData2;
-	}
-
-	private static ArrayList<Map<String, Object>> getSystemSettingB() {
+		private static ArrayList<Map<String, Object>> getSystemSettingB() {
 
 		ArrayList<Map<String, Object>> aData2 = new ArrayList<Map<String, Object>>();
 		Context ct = MyApplication.getAppContext();
@@ -243,7 +161,7 @@ public class AllData {
 		  
 		 android.content.res.Configuration conf = res.getConfiguration();
 		 
-		 aData2=getClassData("android.content.res.Configuration",conf,modifier);
+		 aData2=ReflectHelper.getClassData("android.content.res.Configuration",conf,modifier);
 		 return aData2;
 		
 	}
@@ -255,7 +173,7 @@ public class AllData {
 		 Resources res = ct.getResources();
 		  DisplayMetrics dm = res.getDisplayMetrics();
 		  		 
-		 aData2=getClassData("android.util.DisplayMetrics",dm,modifier);
+		 aData2=ReflectHelper.getClassData("android.util.DisplayMetrics",dm,modifier);
 		 return aData2;
 		
 	}
