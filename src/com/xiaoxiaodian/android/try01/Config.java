@@ -42,11 +42,11 @@ public class Config {
 				"android.os.Build$VERSION", "");
 		addItem(aResult, "Environment", "android.os.Environment",
 				"android.os.Environment", "");
-		addItem(aResult, "SystemPropertyData",
+		addItem(aResult, "SystemProperty",
 				"java.lang.System.getProperties()",
 				"java.lang.System.getProperties()", "SystemPropertyData");
 
-		addItem(aResult, "SystemEnvData",
+		addItem(aResult, "SystemEnv",
 				"java.lang.System.getEnv()",
 				"java.lang.System.getEnv()", "SystemEnvData");
 		
@@ -57,9 +57,9 @@ public class Config {
 		addItem(aResult, "Telephony", "android.telephony.TelephonyManager",
 				"android.telephony.TelephonyManager", "TelephoneData");
 		addItem(aResult, "Activity", "android.app.ActivityManager",
-				"android.app.ActivityManager", "");
+				"android.app.ActivityManager", "ActivityData");
 		addItem(aResult, "Runtime", "java.lang.Runtime", "java.lang.Runtime",
-				"");
+				"RuntimeData");
 		addItem(aResult, "Browser", "android.provider.Browser",
 				"android.provider.Browser", "BrowserData");
 		addItem(aResult, "Permission", "android.Manifest$permission",
@@ -82,6 +82,10 @@ public class Config {
 		addItem(aResult, "BatteryStats",
 				"com.android.internal.os.BatteryStatsImpl",
 				"com.android.internal.os.BatteryStatsImpl", "BatteryUsageData");
+		
+		addItem(aResult, "SystemService",
+				"jandroid.content.Context",
+				"android.content.Context", "SystemServiceData");
 		return aResult;
 	}
 

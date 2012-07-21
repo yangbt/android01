@@ -171,11 +171,12 @@ public class BatteryUsageData {
 	public static void getUIDData(ArrayList<Map<String, Object>> pResult,
 			Object pObject) {
 		try {
-			ReflectHelper.getFields(pResult,
-					"com.android.internal.os.BatteryStatsImpl$Uid", pObject,0);
-			
 			Class<?> bs = Class
 					.forName("com.android.internal.os.BatteryStatsImpl$Uid");
+			ReflectHelper.getFieldsMore(pResult,
+					bs, pObject,0);
+			
+			
 			Method m = bs.getDeclaredMethod("getPackageStats", (Class[]) null);
 			Object pkgStats = m.invoke(pObject, (Object[]) null);
 			if (pkgStats != null & pkgStats instanceof Map) {
@@ -198,11 +199,11 @@ public class BatteryUsageData {
 	public static void getSeviceData(ArrayList<Map<String, Object>> pResult,
 			Object pObject) {
 		try {
-			ReflectHelper.getFields(pResult,
-					"com.android.internal.os.BatteryStatsImpl$Uid$Pkg", pObject,0);
-			
+					
 			Class<?> bs = Class
 					.forName("com.android.internal.os.BatteryStatsImpl$Uid$Pkg");
+			ReflectHelper.getFieldsMore(pResult,
+					bs, pObject,0);
 			Method m = bs.getDeclaredMethod("getServiceStats", (Class[]) null);
 			Object svrStats = m.invoke(pObject, (Object[]) null);
 			if (svrStats != null & svrStats instanceof Map) {
@@ -226,8 +227,10 @@ public class BatteryUsageData {
 	public static void getPkgServData(ArrayList<Map<String, Object>> pResult,
 			Object pObject) {
 		try {
-			ReflectHelper.getFields(pResult,
-					"com.android.internal.os.BatteryStatsImpl$Uid$Pkg$Serv", pObject,0);
+			Class<?> bs = Class
+					.forName("com.android.internal.os.BatteryStatsImpl$Uid$Pkg$Serv");
+			ReflectHelper.getFieldsMore(pResult,bs
+					, pObject,0);
 
 		} catch (Exception e) {
 			Log.e("###", e.toString(), e);

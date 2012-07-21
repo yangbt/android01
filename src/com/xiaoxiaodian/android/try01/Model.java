@@ -81,7 +81,8 @@ public class Model {
 			return b;
 		Object aObject=data.mObject;
 		
-		ReflectHelper.getFieldsMore(aData, aObject.getClass(), aObject,0);	
+		aData=ReflectHelper.getClassData( aObject.getClass(), aObject,0);	
+		
 		for(Map<String, Object> m:aData){
 			String k=(String)m.get(MyConst.ITEM_KEY);
 			String v=(String)m.get(MyConst.ITEM_VALUE);

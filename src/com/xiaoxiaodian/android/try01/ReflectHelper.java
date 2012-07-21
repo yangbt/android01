@@ -17,8 +17,13 @@ public class ReflectHelper {
 			String pClassname, Object classObject, int aExcludedModifer) {
 		// int aExcludedModifer = 0x0;
 		ArrayList<Map<String, Object>> aData = new ArrayList<Map<String, Object>>();
-		getFields(aData, pClassname, classObject, aExcludedModifer);
-		getAttributes(aData, pClassname, classObject);
+		try {
+			getFieldsMore(aData, Class.forName(pClassname), classObject, aExcludedModifer);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		getMethodsReturn(aData, pClassname, classObject);
 		return aData;
 	}
 
@@ -26,16 +31,21 @@ public class ReflectHelper {
 			Class<?> pClass, Object classObject, int aExcludedModifer) {
 		// int aExcludedModifer = 0x0;
 		ArrayList<Map<String, Object>> aData = new ArrayList<Map<String, Object>>();
-		getBasicFields(aData, pClass, classObject, aExcludedModifer);
-		getAttributes(aData, pClass, classObject);
+		getFieldsMore(aData, pClass, classObject, aExcludedModifer);
+		getMethodsReturn(aData, pClass, classObject);
 		return aData;
 	}
 	
 	public static void appendClassData(ArrayList<Map<String, Object>> aData,
 			String pClassname, Object classObject, int aExcludedModifer) {
 		// int aExcludedModifer = 0x0;
-		getFields(aData, pClassname, classObject, aExcludedModifer);
-		getAttributes(aData, pClassname, classObject);
+		try {
+			getFieldsMore(aData,Class.forName(pClassname), classObject, aExcludedModifer);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		getMethodsReturn(aData, pClassname, classObject);
 		return ;
 
 	}
@@ -57,6 +67,7 @@ public class ReflectHelper {
 				item = new HashMap<String, Object>();
 				item.put(MyConst.ITEM_KEY, allFields[i].getName());
 				item.put(MyConst.ITEM_VALUE, allFields[i].get(null));
+				item.put(MyConst.ITEM_NAME, allFields[i].getName());
 				aData.add(item);
 			}
 		} catch (SecurityException e) {
@@ -93,6 +104,7 @@ public class ReflectHelper {
 	 * aData; }
 	 */
 	
+	/*
 	public static void getFields(ArrayList<Map<String, Object>> aData,
 			String className, Object classObject, int excludedModifier) {
 
@@ -113,6 +125,7 @@ public class ReflectHelper {
 		}
 		return;
 	}
+	*/
 	
 	public static void getFieldsMore(ArrayList<Map<String, Object>> aData,
 			Class<?> pClass, Object classObject, int excludedModifier)	{
@@ -165,6 +178,26 @@ public class ReflectHelper {
 				}				
 							
 			
+			}else if(aObject instanceof List){
+				List<?> ar=(List<?>) aObject;
+				for(int i=0;i<ar.size();i++){
+					Object innerObject=ar.get(i);
+				//	Class<?>a=innerObject.getClass();
+				//	getFieldsMore(aData,
+				//			a, innerObject,  excludedModifier) ;
+					String s=innerObject.toString(); //todo fix it;
+					addItem(aData,"array["+i+"]:",s,innerObject);
+				}
+			}else if(aObject.getClass().isArray()){
+				
+				for(int i=0;i<Array.getLength(aObject);i++){
+					Object innerObject=Array.get(aObject, i);
+				//	Class<?>a=innerObject.getClass();
+				//	getFieldsMore(aData,
+				//			a, innerObject,  excludedModifier) ;
+					String s=innerObject.toString(); //todo fix it;
+					addItem(aData,"array["+i+"]:",s,innerObject);
+				}
 			}
 			else{
 				getBasicFields(aData,pClass, classObject,  excludedModifier) ;
@@ -281,29 +314,29 @@ public class ReflectHelper {
 	
 	
 	
-	public static void getAttributes(ArrayList<Map<String, Object>> aData,
+	public static void getMethodsReturn(ArrayList<Map<String, Object>> aData,
 			String className, Object classObject) {
-		getAttributes(aData,
+		getMethodsReturn(aData,
 				className, classObject,0);
 	}
 
-	public static void getAttributes(ArrayList<Map<String, Object>> aData,
+	public static void getMethodsReturn(ArrayList<Map<String, Object>> aData,
 			String className, Object classObject,int pRetFilter) {
 		try {
 			Class<?> aClass = Class.forName(className);
-			getAttributes(aData,aClass, classObject);
+			getMethodsReturn(aData,aClass, classObject);
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-	public static void getAttributes(ArrayList<Map<String, Object>> aData,
+	public static void getMethodsReturn(ArrayList<Map<String, Object>> aData,
 			Class<?> pClass, Object classObject){
-		getAttributes(aData,
+		getMethodsReturn(aData,
 				pClass, classObject,0);
 	}
 	
-	public static void getAttributes(ArrayList<Map<String, Object>> aData,
+	public static void getMethodsReturn(ArrayList<Map<String, Object>> aData,
 			Class<?> pClass, Object classObject,int pRetFilter) {
 		// ArrayList<Map<String, Object>> aData = new ArrayList<Map<String,
 		// Object>>();
@@ -340,7 +373,7 @@ public class ReflectHelper {
 					*/
 					
 					Log.d("method:", mName);
-					if (mName.startsWith("get")) {
+					//if (mName.startsWith("get")) {
 						if (cs == null || cs.length == 0) {
 							Log.d("get atrribute from method: ", mName);	
 							if(! aMethod.isAccessible()) aMethod.setAccessible(true);
@@ -358,7 +391,7 @@ public class ReflectHelper {
 							addItem(aData,mName,aValueString,o);
 					
 						}
-					}
+					//}
 				} catch (SecurityException e) {
 					// throw new RuntimeException(e.getMessage());
 					Log.e("erro", e.toString());

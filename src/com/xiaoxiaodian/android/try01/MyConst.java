@@ -1,9 +1,10 @@
 package com.xiaoxiaodian.android.try01;
 
 public class MyConst {
-public static final String ITEM_KEY="name";
-public static final String ITEM_VALUE="value";
-public static final String ITEM_OBJECT="ext1";
+public static final String ITEM_KEY="ITEM_KEY";
+public static final String ITEM_VALUE="ITEM_VALUE";
+public static final String ITEM_OBJECT="ITEM_OBJECT";
+public static final String ITEM_NAME="ITEM_NAME";
 /*public static final String ITEM_EXT2="ext2";*/
 public static final String ITEM_INTENT="intent";
 public static final String ITEM_ROWITEM="ITEM_ROWITEM";
