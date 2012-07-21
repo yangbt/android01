@@ -2,7 +2,7 @@
 <resources>
 
     <string name="hello">Hello World, Try01Activity!</string>
-    <string name="app_name">Try01</string>
+    <string name="app_name">Phone Object Explorer</string>
 
 
 </resources>

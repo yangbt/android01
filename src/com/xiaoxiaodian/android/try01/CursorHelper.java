@@ -25,7 +25,8 @@ public static String getRow(Cursor cursor){
 public static String getDate(Cursor cursor,String column){
 	Date date = new Date(
 			cursor.getLong(cursor.getColumnIndex(column)));
-		return date.toString();
+	String s=FormatHelper.formatDate(date);
+		return s;
 }
 
 public static boolean isKV(Cursor cursor){
@@ -38,13 +39,13 @@ public static  HashMap<String, Object> getKV(Cursor cursor){
 	HashMap<String, Object> item = new HashMap<String, Object>();
 	
 	if(cursor.getColumnCount()==2){
-		item.put(MyConst.ITEMKEY,cursor.getString(0));
-		item.put(MyConst.ITEMVALUE, cursor.getString(1));
+		item.put(MyConst.ITEM_KEY,cursor.getString(0));
+		item.put(MyConst.ITEM_VALUE, cursor.getString(1));
 	}else if(cursor.getColumnCount()==3 && cursor.getColumnIndex("_id")>-1 ){
 		int i=(cursor.getColumnIndex("_id")+1)%3;
 		int j=(cursor.getColumnIndex("_id")+2)%3;
-		item.put(MyConst.ITEMKEY,cursor.getString(i));
-		item.put(MyConst.ITEMVALUE, cursor.getString(j));
+		item.put(MyConst.ITEM_KEY,cursor.getString(i));
+		item.put(MyConst.ITEM_VALUE, cursor.getString(j));
 	}else{}
 	return item;
 	}
