@@ -13,11 +13,11 @@ public class Item {
 	public String mClassname=null;
 	public Object mObject=null;
 	public String mMembername=null;
-	public Object mParam=null;
+	public Object[] mParam=null;
 	public String mMemberType=null;
 	private ArrayList<Item> mParentItem=null;
 	
-	public Item(String pTitle,String pDesc,Object pParam,
+	public Item(String pTitle,String pDesc,Object[] pParam,
 			String pClassname,Object pObject,String pMembername,
 			String pMemberType ) {
 		this.mDataType=TYPE_MAP;

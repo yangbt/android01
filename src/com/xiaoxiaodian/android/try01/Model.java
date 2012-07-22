@@ -44,9 +44,10 @@ public class Model {
 		MyDataSet aData=new MyDataSet();	
 		if (data == null || (data.mObject==null && data.mClassname==null))
 			return aData;
-		String aSource=data.mParam.toString();
+		Object[] aParam=data.mParam;
 		String aClass=data.mClassname;
-		aData = getData(aSource,aClass);
+		String aMethod=data.mMembername;
+		aData = getData(aParam,aClass,aMethod);
 		ArrayList<Item> i= data.getParent();
 		if(i==null)i=new ArrayList<Item>();
 		i.add(data);
@@ -97,10 +98,10 @@ public class Model {
 	}
 	
 	
-	public static MyDataSet getData(String pTarget,String pClass) {
+	public static MyDataSet getData(Object[] pParam,String pClass,String pMethod) {
 		ArrayList<Map<String, Object>> aData = new ArrayList<Map<String, Object>>();	
 		MyDataSet b=new MyDataSet();
-		Object object= ReflectHelper.invokeStringMethod(pClass, MyConst.DEFAULT_METHOD_NAME, pTarget);
+		Object object= ReflectHelper.invokeMethod(pClass, pMethod, pParam);
 		if(object !=null){
 			Class cl=aData.getClass();
 			Class clb=object.getClass();

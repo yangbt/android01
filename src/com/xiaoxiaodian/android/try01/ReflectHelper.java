@@ -522,34 +522,41 @@ public class ReflectHelper {
 	}
 	
 	
-	public static Object invokeStringMethod(String pClassname,String pMethod,String pParam){
+	public static Object invokeMethod(String pClassname,String pMethod,Object[] pParam){
 		Object value=null;
 		Object aObject=null;
 		Method m=null;
 		int modifiers=0;
 		
 		Class<?> aClass;
+		// Class<?> partypes[];
 		try {
 				aClass = Class.forName(pClassname);
-			    Class<?> partypes[] = new Class[1];
-	            partypes[0] = String.class;	            
-	            m=aClass.getMethod(pMethod,partypes);
+				
+				   // partypes[] = new Class[1];
+		           // partypes[0] = pParam.getClass();	
+				m=findSimpleMethod(aClass, pMethod,pParam);
+	         //   m=aClass.getMethod(pMethod,pParam.getClass());
+				if(m==null) return null;
 				modifiers = m.getModifiers();		
 				if (!Modifier.isStatic(modifiers) )
 					aObject = aClass.newInstance();			
-	            Object arglist[] = new Object[1];
-	            arglist[0] = pParam;	          
-	            value = m.invoke(aObject, arglist);        
+	           // Object arglist[] = new Object[1];
+	           // arglist[0] = pParam;	 
+				//todo fixed it!!!
+				Object[] p=pParam;
+				// p=new Object[]{pParam};
+				 value = m.invoke(aObject, p);  
 	
 		} catch (ClassNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 			return value;
-		} catch (NoSuchMethodException e) {
+	/*	} catch (NoSuchMethodException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return value;
-		} catch (InstantiationException e) {
+	*/	} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return value;
@@ -565,6 +572,34 @@ public class ReflectHelper {
 			return value;
 		}
 		return value;
+	}
+	
+	private static Method findSimpleMethod( Class<?> c,String pMethod,Object[] pParam){
+		Method result=null;
+		try {		   
+		    Method[] allMethods = c.getDeclaredMethods();
+		    for (Method m : allMethods) {
+			String mname = m.getName();
+			if (!mname.equalsIgnoreCase(pMethod)) {
+			    continue;
+			}
+	 		Type[] pType = m.getGenericParameterTypes();
+	 		if (pType.length != pParam.length)   continue;
+	 		for(int i=0;i<pType.length;i++){
+	 			if(pParam[i].getClass().isAssignableFrom(pType[i].getClass()))continue;
+	 	
+	 		}
+	 		if(m!=null){
+	 		m.setAccessible(true);
+	 		result=m;
+	 		break;
+	 		}
+		    }    // production code should handle these exceptions more gracefully
+	
+		} catch (Exception x) {
+		    x.printStackTrace();
+		}
+		return result;
 	}
 	
 	public static Class getInnerClass(String pClassname, String pInnerClassname) {

@@ -9,9 +9,11 @@ import android.content.Intent;
 import android.os.Bundle;
 
 public class Config {
+	private static final String DEFAULT_METHOD_NAME="getData";
+	private static final String DEFAULT_CLASS_NAME="CommonModelData";
 	private static String getDefaultClassName() {
 		String aClassname = null;
-		aClassname = MyConst.DEFAULT_CLASS_NAME;
+		aClassname = DEFAULT_CLASS_NAME;
 
 		String p = Config.class.getCanonicalName();
 		p = p.substring(0, p.lastIndexOf(".") + 1);
@@ -31,7 +33,7 @@ public class Config {
 	}
 	
 	private static String getDefaultMethodName() {
-		return MyConst.DEFAULT_METHOD_NAME;
+		return DEFAULT_METHOD_NAME;
 	}
 
 	public static MyDataSet getConfigData() {
@@ -50,9 +52,19 @@ public class Config {
 				"java.lang.System.getEnv()",
 				"java.lang.System.getEnv()", "SystemEnvData");
 		
-		addItem(aResult, "CpuInfo",
-				"/proc/cpuinfo",
-				"/proc/cpuinfo", "CpuData");
+		
+		String[] filenames=new String[]{"/proc/cpuinfo","/proc/app_info","/proc/buddyinfo",
+				"/proc/bus/input/devices","/proc/bus/input/handlers",
+				"/proc/cgroups","/proc/cmdline","/proc/devices","/proc/diskstats","/proc/driver/rtc",
+				"/proc/fb","/proc/filesystems","/proc/interrupts","/proc/iomem","/proc/ioports",
+				"/proc/loadavg","/proc/locks","/proc/meminfo","/proc/misc","/proc/mounts","/proc/mtd",
+				"/proc/pagetypeinfo","/proc/partitions","/proc/sched_debug","/proc/softirqs",
+				"/proc/stat","/proc/timer_list","/proc/uptime","/proc/version","/proc/vmallocinfo",
+				"/proc/vmstat","/proc/wakelocks","/proc/zoneinfo"
+				};
+		addItem(aResult, "ProcInfo",
+				"/proc/*",
+				filenames, "ProcInfo");
 		
 		addItem(aResult, "Settings", "android.provider.Settings$System",
 				"android.provider.Settings$System", "SystemSettingData");
@@ -93,8 +105,19 @@ public class Config {
 		return aResult;
 	}
 
+	
 	private static void addItem(MyDataSet ds, String name,
-			String value, String pTarget, String pClass) {
+			String value, Object pTarget, String pClass) {
+
+		// MyRowItem(String pTitle,String pDesc,Object pParam,
+				// String pClassname,Object pObject,String pMembername,
+				// String pMemberType )
+		Object[] p=new Object[]{pTarget};
+		addItemB(ds, name,value, p, pClass);
+	}
+	
+	private static void addItemB(MyDataSet ds, String name,
+			String value, Object[] pTarget, String pClass) {
 
 		// MyRowItem(String pTitle,String pDesc,Object pParam,
 				// String pClassname,Object pObject,String pMembername,

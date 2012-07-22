@@ -38,8 +38,7 @@ public static final int BUNDLE_CAT_OBJECT=2; //mean a unsimple type object.
 public static final String TYPE_Field="field";
 public static final String TYPE_METHOD="Method";
 
-public static final String DEFAULT_METHOD_NAME="getData";
-public static final String DEFAULT_CLASS_NAME="CommonModelData";
+
 
 public static final String SPLITER=",\n";
 
