@@ -39,13 +39,13 @@ public static  HashMap<String, Object> getKV(Cursor cursor){
 	HashMap<String, Object> item = new HashMap<String, Object>();
 	
 	if(cursor.getColumnCount()==2){
-		item.put(MyConst.ITEM_KEY,cursor.getString(0));
-		item.put(MyConst.ITEM_VALUE, cursor.getString(1));
+		item.put(Item.ITEM_TITLE,cursor.getString(0));
+		item.put(Item.ITEM_DESC, cursor.getString(1));
 	}else if(cursor.getColumnCount()==3 && cursor.getColumnIndex("_id")>-1 ){
 		int i=(cursor.getColumnIndex("_id")+1)%3;
 		int j=(cursor.getColumnIndex("_id")+2)%3;
-		item.put(MyConst.ITEM_KEY,cursor.getString(i));
-		item.put(MyConst.ITEM_VALUE, cursor.getString(j));
+		item.put(Item.ITEM_TITLE,cursor.getString(i));
+		item.put(Item.ITEM_DESC, cursor.getString(j));
 	}else{}
 	return item;
 	}

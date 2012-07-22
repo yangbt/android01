@@ -11,8 +11,8 @@ public class MyDataSet {
 	private ArrayList<Item> mParentItem=null;
 	public MyDataSet(){
 		mArrayMap = new ArrayList<Map<String, Object>>();
-		mFrom=new String[] { MyConst.BUNDLE_ITEM_TITILE,
-				MyConst.BUNDLE_ITEM_DESC };
+		mFrom=new String[] {Item.ITEM_TITLE,
+				Item.ITEM_DESC };
 	}
 
 	public void setParent(ArrayList<Item> p){

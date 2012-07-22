@@ -20,8 +20,8 @@ public class BrowserData {
 
 		// add other fields
 		item = new HashMap<String, Object>();
-		item.put(MyConst.ITEM_KEY, "android.provider.Browser.BOOKMARKS_URI");
-		item.put(MyConst.ITEM_VALUE,
+		item.put(Item.ITEM_TITLE, "android.provider.Browser.BOOKMARKS_URI");
+		item.put(Item.ITEM_DESC,
 				android.provider.Browser.BOOKMARKS_URI.toString());
 		aData2.add(item);
 		mCursor = ct.getContentResolver().query(
@@ -48,15 +48,15 @@ public class BrowserData {
 						+ mCursor
 								.getString(android.provider.Browser.HISTORY_PROJECTION_URL_INDEX);
 
-				item.put(MyConst.ITEM_KEY, temp);
-				item.put(MyConst.ITEM_VALUE, temp1);
+				item.put(Item.ITEM_TITLE, temp);
+				item.put(Item.ITEM_DESC, temp1);
 				aData2.add(item);
 			}
 			mCursor.close();
 		}
 
-		item.put(MyConst.ITEM_KEY, "android.provider.Browser.SEARCHES_URI");
-		item.put(MyConst.ITEM_VALUE,
+		item.put(Item.ITEM_TITLE, "android.provider.Browser.SEARCHES_URI");
+		item.put(Item.ITEM_DESC,
 				android.provider.Browser.SEARCHES_URI.toString());
 		aData2.add(item);
 		mCursor = ct.getContentResolver().query(
@@ -73,8 +73,8 @@ public class BrowserData {
 
 				temp1 = mCursor
 						.getString(android.provider.Browser.SEARCHES_PROJECTION_SEARCH_INDEX);
-				item.put(MyConst.ITEM_KEY, temp);
-				item.put(MyConst.ITEM_VALUE, temp1);
+				item.put(Item.ITEM_TITLE, temp);
+				item.put(Item.ITEM_DESC, temp1);
 				aData2.add(item);
 			}
 			mCursor.close();

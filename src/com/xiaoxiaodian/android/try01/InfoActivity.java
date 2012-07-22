@@ -30,7 +30,7 @@ public class InfoActivity extends Activity implements OnItemClickListener{
 		/*
 		 * if (data == null) { data = ""; }
 		 */
-		mModelData=Model.initModelData(mr);
+		mModelData=Model.getData(mr);
 		if(mModelData!=null) this.setTitle(mModelData.getParentString());
 		setContentView(R.layout.mylist);
 		lv = (ListView) findViewById(R.id.listview);
@@ -56,8 +56,10 @@ public class InfoActivity extends Activity implements OnItemClickListener{
 			ActionIntent ai = new ActionIntent(aRI);
 			if (ai != null) {
 				Intent intent = ai.getData();
+				if(intent!=null){
 				intent.setClass(this, InfoActivity.class);
 				startActivity(intent);
+				}
 			}
 		}
 	}

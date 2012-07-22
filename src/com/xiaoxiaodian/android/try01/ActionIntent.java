@@ -45,10 +45,14 @@ public class ActionIntent {
 		//this.mDataType=TYPE_MAP;
 			
 		//construct the item's action intent;
+		if(p.noMoreExplore()){
+			this.mIntent=null;
+		}else{
 		Bundle aBundle=createBundle(p);
 		Intent aActionIntent = new Intent();	
 		aActionIntent.putExtra(MyConst.INTENT_DATA, aBundle);
 		this.mIntent=aActionIntent;
+		}
 	}
 	
 	public static Item getItem(Intent p){

@@ -13,6 +13,19 @@ import android.util.Log;
 import android.util.SparseArray;
 
 public class ReflectHelper {
+	
+	public static Class<?> getClass(String pClassName){
+		Class<?> cls=null;
+		
+		try {
+			cls=Class.forName(pClassName);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return cls;
+		
+	}
 	public static ArrayList<Map<String, Object>> getClassData(
 			String pClassname, Object classObject, int aExcludedModifer) {
 		// int aExcludedModifer = 0x0;
@@ -65,8 +78,8 @@ public class ReflectHelper {
 			for (int i = 0; i < allFields.length; i++) {
 				Log.e("Field name", allFields[i].getName());
 				item = new HashMap<String, Object>();
-				item.put(MyConst.ITEM_KEY, allFields[i].getName());
-				item.put(MyConst.ITEM_VALUE, allFields[i].get(null));
+				item.put(Item.ITEM_TITLE, allFields[i].getName());
+				item.put(Item.ITEM_DESC, allFields[i].get(null));
 				item.put(MyConst.ITEM_NAME, allFields[i].getName());
 				aData.add(item);
 			}
@@ -303,16 +316,16 @@ public class ReflectHelper {
 
 	private static void addItem(ArrayList<Map<String, Object>> aData,String k,Object v)	{
 		Map<String, Object>  item = new HashMap<String, Object>();
-		item.put(MyConst.ITEM_KEY, k);
-		item.put(MyConst.ITEM_VALUE, v);
+		item.put(Item.ITEM_TITLE, k);
+		item.put(Item.ITEM_DESC, v);
 		aData.add(item);
 	}
 
 	private static void addItem(ArrayList<Map<String, Object>> aData,String k,Object v,Object o)	{
 		Map<String, Object>  item = new HashMap<String, Object>();
-		item.put(MyConst.ITEM_KEY, k);
-		item.put(MyConst.ITEM_VALUE, v);
-		item.put(MyConst.ITEM_OBJECT, o);
+		item.put(Item.ITEM_TITLE, k);
+		item.put(Item.ITEM_DESC, v);
+		item.put(Item.ITEM_MEMBER_VALUE, o);
 		aData.add(item);
 	}
 	
@@ -438,6 +451,22 @@ public class ReflectHelper {
 				return result;
 	}
 	
+     public static boolean isSimpleType(Object pObject){
+    	 boolean result=false;
+		Class t=pObject.getClass();
+		if(t.isArray()){
+			result=false;
+		}else
+		if(t.isPrimitive()) {
+			result=true;
+		}else		
+		if (t == String.class || t == Integer.class||t == Long.class||t == Short.class||t == Byte.class
+				||t == Boolean.class||t == Float.class||t == Double.class||t == Character.class){
+					result=true;
+		}
+				return result;
+	}
+	
 	public static String simpleTypeToString(Object pObject,Type t){
 		String result=null;
 		//String aString=null;
@@ -522,37 +551,29 @@ public class ReflectHelper {
 	}
 	
 	
-	public static Object invokeMethod(String pClassname,String pMethod,Object[] pParam){
+	public static Object invokeMethod(Class<?> pClass,Object pObject,Method pMethod,Object[] pParam){
 		Object value=null;
-		Object aObject=null;
-		Method m=null;
+		Object aObject=pObject;
+		Method m=pMethod;
 		int modifiers=0;
+		Object[] p=pParam;
 		
-		Class<?> aClass;
+		Class<?> aClass=pClass;
 		// Class<?> partypes[];
+		if(m==null) return null;
 		try {
-				aClass = Class.forName(pClassname);
 				
-				   // partypes[] = new Class[1];
-		           // partypes[0] = pParam.getClass();	
-				m=findSimpleMethod(aClass, pMethod,pParam);
-	         //   m=aClass.getMethod(pMethod,pParam.getClass());
-				if(m==null) return null;
+				if(aClass==null) aClass=pObject.getClass();
 				modifiers = m.getModifiers();		
-				if (!Modifier.isStatic(modifiers) )
-					aObject = aClass.newInstance();			
-	           // Object arglist[] = new Object[1];
-	           // arglist[0] = pParam;	 
-				//todo fixed it!!!
-				Object[] p=pParam;
-				// p=new Object[]{pParam};
+				if (!Modifier.isStatic(modifiers) && aObject==null )
+					aObject = aClass.newInstance();	
 				 value = m.invoke(aObject, p);  
 	
-		} catch (ClassNotFoundException e1) {
+	 /*	} catch (ClassNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 			return value;
-	/*	} catch (NoSuchMethodException e) {
+		} catch (NoSuchMethodException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return value;
@@ -574,7 +595,7 @@ public class ReflectHelper {
 		return value;
 	}
 	
-	private static Method findSimpleMethod( Class<?> c,String pMethod,Object[] pParam){
+	public  static Method findSimpleMethod( Class<?> c,String pMethod,Object[] pParam){
 		Method result=null;
 		try {		   
 		    Method[] allMethods = c.getDeclaredMethods();

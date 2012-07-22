@@ -36,9 +36,9 @@ public class SystemEnvData {
 	
 	private static void addItem(ArrayList<Map<String, Object>> aData,String k,String v,Object o)	{
 		Map<String, Object>  item = new HashMap<String, Object>();
-		item.put(MyConst.ITEM_KEY, k);
-		item.put(MyConst.ITEM_VALUE, v);
-		item.put(MyConst.ITEM_OBJECT, o);
+		item.put(Item.ITEM_TITLE, k);
+		item.put(Item.ITEM_DESC, v);
+		item.put(Item.ITEM_MEMBER_VALUE, o);
 		aData.add(item);
 	}
 }

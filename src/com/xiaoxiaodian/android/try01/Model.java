@@ -15,112 +15,121 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 
 public class Model {
-	
-	
-/*
-	public static ArrayList<Map<String, Object>> getConfig() {
-		ArrayList<Map<String, Object>> aListData = Config.getConfigData();		
-		return aListData;		
-	}
-*/
-	public static void addItem(ArrayList<Map<String, Object>> aData,String k,Object v)	{
-		Map<String, Object>  item = new HashMap<String, Object>();
-		item.put(MyConst.ITEM_KEY, k);
-		item.put(MyConst.ITEM_VALUE, v);
-				aData.add(item);
-	}
-	
-	public static void addItem(ArrayList<Map<String, Object>> aData,String k,Object v,Object o)	{
-		Map<String, Object>  item = new HashMap<String, Object>();
-		item.put(MyConst.ITEM_KEY, k);
-		item.put(MyConst.ITEM_VALUE, v);
-		item.put(MyConst.ITEM_OBJECT, o);
+
+	/*
+	 * public static ArrayList<Map<String, Object>> getConfig() {
+	 * ArrayList<Map<String, Object>> aListData = Config.getConfigData(); return
+	 * aListData; }
+	 */
+	public static void addItem(ArrayList<Map<String, Object>> aData, String k,
+			Object v) {
+		Map<String, Object> item = new HashMap<String, Object>();
+		item.put(Item.ITEM_TITLE, k);
+		item.put(Item.ITEM_DESC, v);
 		aData.add(item);
 	}
 
+	public static void addItem(ArrayList<Map<String, Object>> aData, String k,
+			Object v, Object o) {
+		Map<String, Object> item = new HashMap<String, Object>();
+		item.put(Item.ITEM_TITLE, k);
+		item.put(Item.ITEM_DESC, v);
+		item.put(Item.ITEM_MEMBER_VALUE, o);
+		aData.add(item);
+	}
 
-	
-	public static MyDataSet initModelDataA( Item data) {
-		MyDataSet aData=new MyDataSet();	
-		if (data == null || (data.mObject==null && data.mClassname==null))
+	public static MyDataSet getMethodValue(Item data) {
+		Class<?> aClass = null;
+		Object[] aParam = data.mParam;
+		Object aObject = data.mBelongToObject;
+		MyDataSet aData = new MyDataSet();
+		if (data == null
+				|| (data.mBelongToObject == null && data.mDeclaringClass == null)
+				|| data.mMember == null)
 			return aData;
-		Object[] aParam=data.mParam;
-		String aClass=data.mClassname;
-		String aMethod=data.mMembername;
-		aData = getData(aParam,aClass,aMethod);
-		ArrayList<Item> i= data.getParent();
-		if(i==null)i=new ArrayList<Item>();
+
+		if (data.mBelongToObject == null) {
+			aClass = data.mDeclaringClass;
+		} else {
+			aClass = data.mBelongToObject.getClass();
+		}
+		Method aMethod = (Method) data.mMember;
+		aData = getMethodReturnValue(aClass, aObject, aMethod, aParam);		
+		ArrayList<Item> i = data.getParent();
+		if (i == null)
+			i = new ArrayList<Item>();
 		i.add(data);
-		if(aData!=null) aData.setParent(i);
+		if (aData != null)
+			aData.setParent(i);
 		return aData;
 	}
-	
-	public static MyDataSet initModelData( Item data) {
-		MyDataSet ads=null;
-		if(data==null){
-			//first page
-			ads=Config.getConfigData();
-		}else if(data.mObject== null & data.mMembername!=null){
-			ads=initModelDataA(data);
-		}else if(data.mObject!=null){
-			ads=initModelDataB(data);
+
+	public static MyDataSet getData(Item data) {
+		MyDataSet ads = null;
+		if (data == null) {
+			// first page
+			ads = Config.getConfigData();
+		} else if (data.mMemberValue == null && data.mMember != null
+				&& (data.mMember instanceof Method)) {
+			ads = getMethodValue(data);
+		} else if (data.mMemberValue != null) {
+			ads = getObjectMember(data);
 		}
 		/*
-		if(type==MyConst.BUNDLE_CAT_CAT) aData=initModelDataA(data);
-		else if(type==MyConst.BUNDLE_CAT_OBJECT) aData=initModelDataB(data);
-		*/
-		
+		 * if(type==MyConst.BUNDLE_CAT_CAT) aData=initModelDataA(data); else
+		 * if(type==MyConst.BUNDLE_CAT_OBJECT) aData=initModelDataB(data);
+		 */
+
 		return ads;
 	}
-	
-	
-	public static MyDataSet initModelDataB( Item data) {
-		ArrayList<Map<String, Object>> aData = new ArrayList<Map<String, Object>>();	
-		MyDataSet b=new MyDataSet();
-		
-		if (data == null || data.mObject==null)
+
+	public static MyDataSet getObjectMember(Item data) {
+		ArrayList<Map<String, Object>> aData = new ArrayList<Map<String, Object>>();
+		MyDataSet b = new MyDataSet();
+
+		if (data == null || data.mMemberValue == null)
 			return b;
-		Object aObject=data.mObject;
-		
-		aData=ReflectHelper.getClassData( aObject.getClass(), aObject,0);	
-		
-		for(Map<String, Object> m:aData){
-			String k=(String)m.get(MyConst.ITEM_KEY);
-			String v=(String)m.get(MyConst.ITEM_VALUE);
-			Object o=m.get(MyConst.ITEM_OBJECT);
-			b.add(new Item(k,v,o));
+		Object aObject = data.mMemberValue;
+
+		aData = ReflectHelper.getClassData(aObject.getClass(), aObject, 0);
+
+		for (Map<String, Object> m : aData) {
+			String k = (String) m.get(Item.ITEM_TITLE);
+			String v = (String) m.get(Item.ITEM_DESC);
+			Object o = m.get(Item.ITEM_MEMBER_VALUE);
+			b.add(new Item(k, v, o));
 		}
-		ArrayList<Item> i= data.getParent();
-		if(i==null)i=new ArrayList<Item>();
+		ArrayList<Item> i = data.getParent();
+		if (i == null)
+			i = new ArrayList<Item>();
 		i.add(data);
-		if(b!=null) b.setParent(i);
+		if (b != null)
+			b.setParent(i);
 		return b;
 	}
-	
-	
-	public static MyDataSet getData(Object[] pParam,String pClass,String pMethod) {
-		ArrayList<Map<String, Object>> aData = new ArrayList<Map<String, Object>>();	
-		MyDataSet b=new MyDataSet();
-		Object object= ReflectHelper.invokeMethod(pClass, pMethod, pParam);
-		if(object !=null){
-			Class cl=aData.getClass();
-			Class clb=object.getClass();
-			if(object instanceof MyDataSet) {
-				b=(MyDataSet)object;
-			}else if(cl.isAssignableFrom(clb)){
-				aData=(ArrayList<Map<String, Object>>) object;
-				for(Map<String, Object> m:aData){
-					String k=(String)m.get(MyConst.ITEM_KEY);
-					String v=(String)m.get(MyConst.ITEM_VALUE);
-					Object o=m.get(MyConst.ITEM_OBJECT);
-					b.add(new Item(k,v,o));
+
+	public static MyDataSet getMethodReturnValue(Class<?> pClass,
+			Object pObject, Method pMethod, Object[] pParam) {
+		ArrayList<Map<String, Object>> aData = new ArrayList<Map<String, Object>>();
+		MyDataSet b = new MyDataSet();
+
+		Object object = ReflectHelper.invokeMethod(pClass, pObject, pMethod,
+				pParam);
+		if (object != null) {
+			Class cl = aData.getClass();
+			Class clb = object.getClass();
+			if (object instanceof MyDataSet) {
+				b = (MyDataSet) object;
+			} else if (cl.isAssignableFrom(clb)) {
+				aData = (ArrayList<Map<String, Object>>) object;
+				for (Map<String, Object> m : aData) {
+					String k = (String) m.get(Item.ITEM_TITLE);
+					String v = (String) m.get(Item.ITEM_DESC);
+					Object o = m.get(Item.ITEM_MEMBER_VALUE);
+					b.add(new Item(k, v, o));
 				}
 			}
-	
 		}
-	
 		return b;
 	}
-	
-
 }

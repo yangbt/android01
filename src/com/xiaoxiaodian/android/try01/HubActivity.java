@@ -51,16 +51,19 @@ public class HubActivity extends Activity implements OnItemClickListener {
 		if (aRI != null) {
 			ActionIntent ai = new ActionIntent(aRI);
 			if (ai != null) {
-				Intent intent = ai.getData();
+		Intent intent = ai.getData();
+				
+				if(intent !=null){
 				intent.setClass(this, InfoActivity.class);
 				startActivity(intent);
+				}
 			}
 		}
 	}
 
 	private void getModelData() {
 
-		mModelData = Model.initModelData(null);
+		mModelData = Model.getData(null);
 
 	}
 }

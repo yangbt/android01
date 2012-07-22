@@ -20,16 +20,16 @@ public class SystemSettingData {
 	if (mCursor != null) {
 		while (mCursor.moveToNext()) {
 			item = new HashMap<String, Object>();
-			item.put(MyConst.ITEM_KEY, mCursor.getString(1));
-			item.put(MyConst.ITEM_VALUE, mCursor.getString(2));
+			item.put(Item.ITEM_TITLE, mCursor.getString(1));
+			item.put(Item.ITEM_DESC, mCursor.getString(2));
 			aData2.add(item);
 		}
 	}
 
 	// add other fields
 	item = new HashMap<String, Object>();
-	item.put(MyConst.ITEM_KEY, "CONTENT_URI");
-	item.put(MyConst.ITEM_VALUE,
+	item.put(Item.ITEM_TITLE, "CONTENT_URI");
+	item.put(Item.ITEM_DESC,
 			android.provider.Settings.System.CONTENT_URI.toString());
 	aData2.add(item);
 

@@ -83,8 +83,8 @@ public class appUsageData {
                     	  }                 	  
                     }
                   	item = new HashMap<String, Object>();
-            		item.put(MyConst.ITEM_KEY,pname );
-            		item.put(MyConst.ITEM_VALUE, info);
+            		item.put(Item.ITEM_TITLE,pname );
+            		item.put(Item.ITEM_DESC, info);
             		result.add(item);
             	  }
               }                    

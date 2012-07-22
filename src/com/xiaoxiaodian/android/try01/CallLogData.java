@@ -20,8 +20,8 @@ public class CallLogData {
 		String temp1 = "";
 	
 		item = new HashMap<String, Object>();
-		item.put(MyConst.ITEM_KEY, "android.provider.CallLog.Calls.CONTENT_URI");
-		item.put(MyConst.ITEM_VALUE,
+		item.put(Item.ITEM_TITLE, "android.provider.CallLog.Calls.CONTENT_URI");
+		item.put(Item.ITEM_DESC,
 				android.provider.CallLog.Calls.CONTENT_URI.toString());
 		aData2.add(item);
 
@@ -37,8 +37,8 @@ public class CallLogData {
 
 					temp1 = CursorHelper.getRow(aCursor);
 
-					item.put(MyConst.ITEM_KEY, temp);
-					item.put(MyConst.ITEM_VALUE, temp1);
+					item.put(Item.ITEM_TITLE, temp);
+					item.put(Item.ITEM_DESC, temp1);
 					aData2.add(item);
 				}
 			}

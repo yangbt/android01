@@ -20,8 +20,8 @@ public class SettingSecureData {
 		String temp1 = "";
 	
 		item = new HashMap<String, Object>();
-		item.put(MyConst.ITEM_KEY, "android.provider.Settings.Secure.CONTENT_URI");
-		item.put(MyConst.ITEM_VALUE,
+		item.put(Item.ITEM_TITLE, "android.provider.Settings.Secure.CONTENT_URI");
+		item.put(Item.ITEM_DESC,
 				android.provider.Settings.Secure.CONTENT_URI.toString());
 		aData2.add(item);
 

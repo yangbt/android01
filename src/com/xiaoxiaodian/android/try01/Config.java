@@ -1,5 +1,6 @@
 package com.xiaoxiaodian.android.try01;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -106,18 +107,18 @@ public class Config {
 	}
 
 	
-	private static void addItem(MyDataSet ds, String name,
-			String value, Object pTarget, String pClass) {
+	private static void addItem(MyDataSet ds, String pTitle,
+			String pDesc, Object pParams, String pClass) {
 
 		// MyRowItem(String pTitle,String pDesc,Object pParam,
 				// String pClassname,Object pObject,String pMembername,
 				// String pMemberType )
-		Object[] p=new Object[]{pTarget};
-		addItemB(ds, name,value, p, pClass);
+		Object[] p=new Object[]{pParams};
+		addItemB(ds, pTitle,pDesc, p, pClass);
 	}
 	
-	private static void addItemB(MyDataSet ds, String name,
-			String value, Object[] pTarget, String pClass) {
+	private static void addItemB(MyDataSet ds, String pTitle,
+			String pDesc, Object[] pParams, String pClass) {
 
 		// MyRowItem(String pTitle,String pDesc,Object pParam,
 				// String pClassname,Object pObject,String pMembername,
@@ -125,6 +126,10 @@ public class Config {
 		String pM=getDefaultMethodName();
 		String aClassname=(pClass==null || pClass.isEmpty())?getDefaultClassName():pClass;
 		if(aClassname.indexOf(".")<0) aClassname=getDefaultPackageName()+"."+aClassname;
-		ds.add(new Item(name,value,pTarget,aClassname, null,pM, MyConst.TYPE_METHOD));
+		Class<?> cls=ReflectHelper.getClass(aClassname);
+		
+		Method aMethod=ReflectHelper.findSimpleMethod(cls, pM, pParams);
+		Item item=new Item(pTitle,pDesc,pParams,cls, null,aMethod);
+		ds.add(item);
 	}
 }
