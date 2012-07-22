@@ -50,6 +50,10 @@ public class Config {
 				"java.lang.System.getEnv()",
 				"java.lang.System.getEnv()", "SystemEnvData");
 		
+		addItem(aResult, "CpuInfo",
+				"/proc/cpuinfo",
+				"/proc/cpuinfo", "CpuData");
+		
 		addItem(aResult, "Settings", "android.provider.Settings$System",
 				"android.provider.Settings$System", "SystemSettingData");
 		addItem(aResult, "Secure", "android.provider.Settings.Secure",

@@ -144,7 +144,9 @@ public class ReflectHelper {
 			if (!Modifier.isStatic(modifiers) && aObject == null)
 				aObject = aClass.newInstance();
 			
-			if (aObject != null & aObject instanceof SparseArray) {
+			if (aObject != null){
+				if( aObject instanceof SparseArray) {
+			
 				SparseArray<?> sa = (SparseArray<?>) aObject;
 				for (int i = 0; i < sa.size(); i++) {
 					Object innerObject = sa.get(sa.keyAt(i));
@@ -202,7 +204,9 @@ public class ReflectHelper {
 			else{
 				getBasicFields(aData,pClass, classObject,  excludedModifier) ;
 			}
-		
+			}else{
+				getBasicFields(aData,pClass, classObject,  excludedModifier) ;
+			}
 		} catch (SecurityException e) {
 			// throw new RuntimeException(e.getMessage());
 			e.printStackTrace();
